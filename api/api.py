@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, abort, make_response, request
 import sqlite3
+import sys
+
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -35,7 +37,7 @@ def api_all_goods():
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
-    
+
 @app.route('/api/v1/resources/goods', methods=['GET'])
 def api_get_goods_city():
     query_parameters = request.args
@@ -56,8 +58,36 @@ def api_get_goods_city():
     cur = conn.cursor()
 
     results = cur.execute(query, to_filter).fetchall()
-
+    conn.close()
     return jsonify(results)
 
+@app.route('/api/v1/resources/users/<int:task_id>', methods=['PUT'])
+def update_user(task_id):
+    query_parameters = request.args
+
+    print('bonjour')
+    nom = query_parameters.get('nom')
+    prenom = query_parameters.get('prenom')
+    birth = query_parameters.get('birth')
+
+    conn = sqlite3.connect('../data/data.db')
+    cur = conn.cursor()
+    #UPDATE COMPANY SET ADDRESS = 'Texas' WHERE ID = 6;
+    query = "UPDATE Users SET "
+    if nom:
+        query += "nom = '" + nom + "',"
+    if prenom:
+        query += "prenom = '" + prenom + "',"
+    if birth:
+        query += "birth = '" + birth + "',"
+
+    query = query[:-1] + " WHERE id = " + repr(task_id) + ";"
+    print(query)
+    cur.execute(query)
+    conn.commit()
+
+    user = cur.execute('SELECT * FROM Users WHERE id = ' + repr(task_id) + ';').fetchall()
+    conn.close()
+    return jsonify(user)
+
 app.run()
-#s
