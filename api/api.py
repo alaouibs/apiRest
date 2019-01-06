@@ -61,11 +61,10 @@ def api_get_goods_city():
     conn.close()
     return jsonify(results)
 
-@app.route('/api/v1/resources/users/<int:task_id>', methods=['PUT'])
-def update_user(task_id):
+@app.route('/api/v1/resources/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
     query_parameters = request.args
 
-    print('bonjour')
     nom = query_parameters.get('nom')
     prenom = query_parameters.get('prenom')
     birth = query_parameters.get('birth')
@@ -81,12 +80,53 @@ def update_user(task_id):
     if birth:
         query += "birth = '" + birth + "',"
 
-    query = query[:-1] + " WHERE id = " + repr(task_id) + ";"
+    query = query[:-1] + " WHERE id = " + repr(user_id) + ";"
     print(query)
     cur.execute(query)
     conn.commit()
 
-    user = cur.execute('SELECT * FROM Users WHERE id = ' + repr(task_id) + ';').fetchall()
+    user = cur.execute('SELECT * FROM Users WHERE id = ' + repr(user_id) + ';').fetchall()
+    conn.close()
+    return jsonify(user)
+
+@app.route('/api/v1/resources/goods/<int:good_id>', methods=['PUT'])
+def update_good(good_id):
+    query_parameters = request.args
+
+    carac = query_parameters.get('carac')
+    description = query_parameters.get('description')
+    kind = query_parameters.get('kind')
+    nom = query_parameters.get('nom')
+    piece = query_parameters.get('piece')
+    proprietaire = query_parameters.get('proprietaire')
+    ville = query_parameters.get('ville')
+    
+
+    conn = sqlite3.connect('../data/data.db')
+    cur = conn.cursor()
+    #UPDATE COMPANY SET ADDRESS = 'Texas' WHERE ID = 6;
+    query = "UPDATE Goods SET "
+    if nom:
+        query += "nom = '" + nom + "',"
+    if carac:
+        query += "carac = '" + carac + "',"
+    if description:
+        query += "description = '" + description + "',"
+    if kind:
+        query += "kind = '" + kind + "',"
+    if piece:
+        query += "piece = '" + piece + "',"
+    if proprietaire:
+        query += "proprietaire = '" + proprietaire + "',"
+    if ville:
+        query += "ville = '" + ville + "',"
+
+    query = query[:-1] + " WHERE id = " + repr(good_id) + ";"
+    print(query)
+    cur.execute(query)
+    conn.commit()
+
+    user = cur.execute('SELECT * FROM Goods WHERE id = ' + repr(good_id) + ';').fetchall()
     conn.close()
     return jsonify(user)
 
