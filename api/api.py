@@ -32,5 +32,32 @@ def api_all_goods():
 
     return jsonify(users)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return "<h1>404</h1><p>The resource could not be found.</p>", 404
+    
+@app.route('/api/v1/resources/goods', methods=['GET'])
+def api_get_goods_city():
+    query_parameters = request.args
+
+    ville = query_parameters.get('ville')
+
+    query = "SELECT * FROM Goods WHERE"
+    to_filter = []
+
+    if ville:
+        query += ' ville=?'
+        to_filter.append(ville)
+    else:
+        return page_not_found(404)
+
+    conn = sqlite3.connect('../data/data.db')
+    conn.row_factory = dict_factory
+    cur = conn.cursor()
+
+    results = cur.execute(query, to_filter).fetchall()
+
+    return jsonify(results)
+
 app.run()
 #s
