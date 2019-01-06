@@ -88,8 +88,8 @@ goods = [
 conn = sqlite3.connect('../data/data.db')
 c = conn.cursor()
 
-c.execute('drop table if exists Users;')
-c.execute("CREATE TABLE IF NOT EXISTS Users(nom, prenom, birth, id);")
+c.execute('drop table if exists User;')
+c.execute("CREATE TABLE IF NOT EXISTS User(nom, prenom, birth, id INTEGER PRIMARY KEY);")
 
 for client in clients:
     row = [
@@ -98,10 +98,10 @@ for client in clients:
         client.get('birth'),
         client.get('id')
     ]
-    c.execute("insert into Users values (?,?,?,?)", row)
+    c.execute("insert into User values (?,?,?,?)", row)
 
-c.execute('drop table if exists Goods;')
-c.execute("CREATE TABLE IF NOT EXISTS Goods(nom, description, kind, ville, piece, carac, proprietaire, id);")
+c.execute('drop table if exists Good;')
+c.execute("CREATE TABLE IF NOT EXISTS Good(nom, description, kind, ville, piece, carac, proprietaire, id INTEGER PRIMARY KEY);")
 
 for good in goods:
     row = [
@@ -114,7 +114,7 @@ for good in goods:
         good.get('proprietaire'),
         good.get('id')
     ]
-    c.execute("insert into Goods values (?,?,?,?,?,?,?,?)", row)
+    c.execute("insert into Good values (?,?,?,?,?,?,?,?)", row)
 conn.commit()
 #results = c.execute('select * from Goods where id = 1').fetchall()
 #print(results)

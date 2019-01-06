@@ -18,7 +18,7 @@ def index():
 
 @app.route('/api/v1/resources/users/all', methods=['GET'])
 def api_all_users():
-    conn = sqlite3.connect('../data/data.db')
+    conn = sqlite3.connect('../../data/data.db')
     conn.row_factory = dict_factory
     cur = conn.cursor()
     users = cur.execute('SELECT * FROM Users;').fetchall()
@@ -27,7 +27,7 @@ def api_all_users():
 
 @app.route('/api/v1/resources/goods/all', methods=['GET'])
 def api_all_goods():
-    conn = sqlite3.connect('../data/data.db')
+    conn = sqlite3.connect('../../data/data.db')
     conn.row_factory = dict_factory
     cur = conn.cursor()
     users = cur.execute('SELECT * FROM Goods;').fetchall()
