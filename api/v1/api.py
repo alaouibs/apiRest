@@ -21,7 +21,7 @@ def api_all_users():
     conn = sqlite3.connect('../../data/data.db')
     conn.row_factory = dict_factory
     cur = conn.cursor()
-    users = cur.execute('SELECT * FROM Users;').fetchall()
+    users = cur.execute('SELECT * FROM User;').fetchall()
 
     return jsonify(users)
 
@@ -30,7 +30,7 @@ def api_all_goods():
     conn = sqlite3.connect('../../data/data.db')
     conn.row_factory = dict_factory
     cur = conn.cursor()
-    users = cur.execute('SELECT * FROM Goods;').fetchall()
+    users = cur.execute('SELECT * FROM Good;').fetchall()
 
     return jsonify(users)
 
@@ -44,7 +44,7 @@ def api_get_goods_city():
 
     ville = query_parameters.get('ville')
 
-    query = "SELECT * FROM Goods WHERE"
+    query = "SELECT * FROM Good WHERE"
     to_filter = []
 
     if ville:
@@ -53,7 +53,7 @@ def api_get_goods_city():
     else:
         return page_not_found(404)
 
-    conn = sqlite3.connect('../data/data.db')
+    conn = sqlite3.connect('../../data/data.db')
     conn.row_factory = dict_factory
     cur = conn.cursor()
 
@@ -69,10 +69,10 @@ def update_user(user_id):
     prenom = query_parameters.get('prenom')
     birth = query_parameters.get('birth')
 
-    conn = sqlite3.connect('../data/data.db')
+    conn = sqlite3.connect('../../data/data.db')
     cur = conn.cursor()
     #UPDATE COMPANY SET ADDRESS = 'Texas' WHERE ID = 6;
-    query = "UPDATE Users SET "
+    query = "UPDATE User SET "
     if nom:
         query += "nom = '" + nom + "',"
     if prenom:
@@ -85,7 +85,7 @@ def update_user(user_id):
     cur.execute(query)
     conn.commit()
 
-    user = cur.execute('SELECT * FROM Users WHERE id = ' + repr(user_id) + ';').fetchall()
+    user = cur.execute('SELECT * FROM User WHERE id = ' + repr(user_id) + ';').fetchall()
     conn.close()
     return jsonify(user)
 
@@ -102,10 +102,10 @@ def update_good(good_id):
     ville = query_parameters.get('ville')
     
 
-    conn = sqlite3.connect('../data/data.db')
+    conn = sqlite3.connect('../../data/data.db')
     cur = conn.cursor()
     #UPDATE COMPANY SET ADDRESS = 'Texas' WHERE ID = 6;
-    query = "UPDATE Goods SET "
+    query = "UPDATE Good SET "
     if nom:
         query += "nom = '" + nom + "',"
     if carac:
@@ -126,7 +126,7 @@ def update_good(good_id):
     cur.execute(query)
     conn.commit()
 
-    user = cur.execute('SELECT * FROM Goods WHERE id = ' + repr(good_id) + ';').fetchall()
+    user = cur.execute('SELECT * FROM Good WHERE id = ' + repr(good_id) + ';').fetchall()
     conn.close()
     return jsonify(user)
 
